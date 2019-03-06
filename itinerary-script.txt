@@ -1,0 +1,37 @@
+1. Add a trip
+    a. Select: Overall Location
+        i. Select: Country
+            - Prompt: Name
+        ii. Select: State
+            - Prompt: Name
+        iii. Select: City
+            - Prompt: Name
+    b. Select: Duration
+        ba. Prompt: Starting Date
+        bb. Prompt: Ending Date
+    c. Select: Done adding trip
+2. Add trip details
+    a. Select: trip from list of trips
+        i. Prompt: Location Name on that Date
+        i. Select: Date you'd like to edit
+            - Select: Activities
+                *Prompt: Activity Entry
+            - Select: Restaurants
+                *Prompt: Restaurant Entry
+            - Select: Hotel
+                *Prompt: Hotel Entry
+            - Select: Notes
+                *Prompt: Note Entry
+3. Print your itinerary
+    a. Select: trip from list of trips
+        i. Select: High Level View
+            - show trip name, date and location Name
+        ii. Select: Detail View
+            - show trip name, date, location Name and all Details (Activities, Restaurants, Hotel, Notes)
+        iii. Select: Custom View
+            - Which details would you like to show
+                * Select: Activities
+                * Select: Restaurants
+                * Select: Hotel
+                * Select: Notes
+                     - show trip name, dates, location name and selected details

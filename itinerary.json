@@ -1,0 +1,38 @@
+[
+    {
+        "Location": "Japan",
+        "StartDate": "2018-06-01T00:00:00Z",
+        "EndDate": "2018-06-04T00:00:00Z",
+        "Days": [
+            {
+                "Date": "2018-06-01T00:00:00Z",
+                "Location": "tokyo",
+                "Activities": "have fun",
+                "Restaurants": "ramen",
+                "Hotel": "hut"
+            },
+            {
+                "Date": "2018-06-02T00:00:00Z",
+                "Location": "",
+                "Activities": "",
+                "Restaurants": "",
+                "Hotel": ""
+            },
+            {
+                "Date": "2018-06-03T00:00:00Z",
+                "Location": "",
+                "Activities": "",
+                "Restaurants": "",
+                "Hotel": ""
+            },
+            {
+                "Date": "2018-06-04T00:00:00Z",
+                "Location": "",
+                "Activities": "",
+                "Restaurants": "",
+                "Hotel": ""
+            }
+        ],
+        "Budget": 5000
+    }
+]
