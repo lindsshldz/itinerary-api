@@ -1,2 +1,1 @@
-# itinerary-cli
 # itinerary-api
