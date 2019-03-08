@@ -27,7 +27,8 @@ func main() {
 	itineraryServer := server.NewServer(itineraryService)
 
 	router := mux.NewRouter()
-	// router.HandleFunc("/trips/{tripID}", itineraryServer.GetTripsHandler).Methods("GET")
+	router.HandleFunc("/trips/{tripID}/days", itineraryServer.ListDaysAtTripHandler).Methods("GET")
+	router.HandleFunc("/trips/{tripID}/days/{dayID}", itineraryServer.AddDetailsToDayHandler).Methods("PUT")
 	router.HandleFunc("/trips", itineraryServer.CreateTripHandler).Methods("POST")
 	router.HandleFunc("/trips", itineraryServer.ListTripsHandler).Methods("GET")
 

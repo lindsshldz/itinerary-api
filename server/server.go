@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/lindsshldz/itinerary-api/itinerary"
 )
 
@@ -39,35 +41,6 @@ func (s *ItineraryServer) ListTripsHandler(rw http.ResponseWriter, r *http.Reque
 	rw.Write(TripsJSON)
 }
 
-// func (s *ItineraryServer) GetTripHandler(rw http.ResponseWriter, r *http.Request) {
-// 	vars := mux.Vars(r)
-// 	tripIDStr := vars["tripID"]
-
-// 	tripID, err := strconv.Atoi(tripIDStr)
-// 	if err != nil {
-// 		fmt.Println("Invalid tripID:", err)
-// 		rw.WriteHeader(http.StatusBadRequest)
-// 		return
-// 	}
-
-// 	trip, err := s.itineraryService.GetTrip(tripID)
-// 	if err != nil {
-// 		fmt.Println("Error getting trip:", err)
-// 		rw.WriteHeader(http.StatusInternalServerError)
-// 		return
-// 	}
-
-// 	tripJSON, err := json.Marshal(trip)
-// 	if err != nil {
-// 		fmt.Println("Error marshaling trip:", err)
-// 		rw.WriteHeader(http.StatusInternalServerError)
-// 		return
-// 	}
-
-// 	rw.Header().Add("Content-Type", "application/json")
-// 	rw.Write(arcadeJSON)
-// }
-
 type CreateTripRequest struct {
 	Location  string
 	Budget    float64
@@ -94,6 +67,96 @@ func (s *ItineraryServer) CreateTripHandler(rw http.ResponseWriter, r *http.Requ
 	err = s.itineraryService.AddTrip(newTrip.Location, newTrip.Budget, newTrip.StartDate, newTrip.EndDate)
 	if err != nil {
 		fmt.Println("Error creating new trip:", err)
+		rw.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	rw.WriteHeader(http.StatusCreated)
+}
+
+func (s *ItineraryServer) ListDaysAtTripHandler(rw http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	tripIDStr := vars["tripID"]
+
+	tripID, err := strconv.Atoi(tripIDStr)
+	if err != nil {
+		fmt.Println("Invalid arcadeID:", err)
+		rw.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	daysAtTrip, err := s.itineraryService.ListDays(tripID)
+	if err != nil {
+		fmt.Println("Error listing days:", err)
+		rw.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	daysAtTripJSON, err := json.Marshal(daysAtTrip)
+	if err != nil {
+		fmt.Println("Error marshaling daysAtTrip:", err)
+		rw.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	rw.Header().Add("Content-Type", "application/json")
+	rw.Write(daysAtTripJSON)
+}
+
+type AddDayDetailsRequest struct {
+	Location    string
+	Activities  string
+	Restaurants string
+	Hotel       string
+}
+
+func (s *ItineraryServer) AddDetailsToDayHandler(rw http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	tripIDStr := vars["tripID"]
+
+	tripID, err := strconv.Atoi(tripIDStr)
+	if err != nil {
+		fmt.Println("Invalid tripID:", err)
+		rw.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	dayIDStr := vars["dayID"]
+
+	dayID, err := strconv.Atoi(dayIDStr)
+	if err != nil {
+		fmt.Println("Invalid dayID:", err)
+		rw.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Println("Error reading request body:", err)
+		rw.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	var newDayDetails AddDayDetailsRequest
+	err = json.Unmarshal(requestBody, &newDayDetails)
+	if err != nil {
+		fmt.Println("Error unmarshaling day details:", err)
+		rw.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	day := itinerary.Day{
+		ID:          dayID,
+		Location:    newDayDetails.Location,
+		Activities:  newDayDetails.Activities,
+		Restaurants: newDayDetails.Restaurants,
+		Hotel:       newDayDetails.Hotel,
+		TripID:      tripID,
+	}
+
+	err = s.itineraryService.UpdateDetails(day)
+	if err != nil {
+		fmt.Println("Error adding details to day:", err)
 		rw.WriteHeader(http.StatusInternalServerError)
 		return
 	}
