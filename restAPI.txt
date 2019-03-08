@@ -1,0 +1,29 @@
+
+GET /trips
+    Returns a list of all the trips
+
+POST /trips
+    Adds a new trip to the list of trip. Requires a Location, Start Date, End Date and Budget to be sent.
+
+GET /trips/{tripID}
+    Returns a single trip.
+
+PUT /trips/{tripID}
+    Allows for updating a specific trip. The API only lets the Start Date, End Date, and Budget to be updated (the location is permanent).
+
+GET /trips/{tripID}/days
+    Returns the list of the days to plan for that specific trip.
+
+GET /trips/{tripID}/days/{dayID}
+    Returns the list of the all the activities planned on that specific day for that specific trip.
+
+POST /trips/{tripID}/days/{dayID}
+    Adds new activities to that specific day of that specific trip. Requires Location, Activities, Restaurants, Hotel.
+
+PUT /trips/{tripID}/days/{dayID}
+    Allows for updating a specific day of that specific trip. The API only lets the Location, Activities, Restaurants, Hotel be edited (the date and trip ID is permanent).
+
+
+DELETE /trips/{tripID}
+
+DELETE /trips/{tripID}/days/{dayID}

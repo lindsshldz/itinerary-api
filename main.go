@@ -2,13 +2,17 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/lindsshldz/itinerary-cli/cli"
-	"github.com/lindsshldz/itinerary-cli/db"
-	"github.com/lindsshldz/itinerary-cli/itinerary"
+	"github.com/gorilla/mux"
+	"github.com/lindsshldz/itinerary-api/db"
+	"github.com/lindsshldz/itinerary-api/itinerary"
+	"github.com/lindsshldz/itinerary-api/server"
 )
+
+const port = ":8000"
 
 func main() {
 
@@ -20,10 +24,16 @@ func main() {
 
 	itineraryService := itinerary.NewService(db)
 
-	cliMenu := cli.New(itineraryService)
+	itineraryServer := server.NewServer(itineraryService)
 
-	fmt.Println()
+	router := mux.NewRouter()
+	// router.HandleFunc("/trips/{tripID}", itineraryServer.GetTripsHandler).Methods("GET")
+	router.HandleFunc("/trips", itineraryServer.CreateTripHandler).Methods("POST")
+	router.HandleFunc("/trips", itineraryServer.ListTripsHandler).Methods("GET")
 
-	cliMenu.MainMenu()
+	http.Handle("/", router)
+
+	fmt.Println("Waiting for requests on port:", port)
+	http.ListenAndServe(port, nil)
 
 }
