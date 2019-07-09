@@ -10,6 +10,7 @@ import (
 	"github.com/lindsshldz/itinerary-api/db"
 	"github.com/lindsshldz/itinerary-api/itinerary"
 	"github.com/lindsshldz/itinerary-api/server"
+	"github.com/rs/cors"
 )
 
 const port = ":8000"
@@ -32,7 +33,21 @@ func main() {
 	router.HandleFunc("/trips", itineraryServer.CreateTripHandler).Methods("POST")
 	router.HandleFunc("/trips", itineraryServer.ListTripsHandler).Methods("GET")
 
-	http.Handle("/", router)
+	// allow cross-domain requests
+	corsWrapper := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"}, // All origins
+		AllowedMethods: []string{
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodPatch,
+			http.MethodDelete,
+			http.MethodOptions,
+			http.MethodHead,
+		},
+	})
+
+	http.Handle("/", corsWrapper.Handler(router))
 
 	fmt.Println("Waiting for requests on port:", port)
 	http.ListenAndServe(port, nil)
